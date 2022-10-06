@@ -24,19 +24,20 @@ const useAddDeleteCity = () => {
     }
   }, [country, city])
 
-  const onDeleteCity = useCallback(() => {
+  const onDeleteCity = useCallback((city: string, country: string) => {
     if (city && country) {
       dispatch(removeCity({ country, city }))
     }
-  }, [country, city])
+  }, [])
 
   const transformData = (data: SavedList) => {
-    //@ts-ignore TODO: Will fix this once data is consistent
     return Object.keys(data)?.map(country => ({
       title: country,
+      //@ts-ignore TODO: Will fix this once data is consistent
       data: data?.[country],
     }))
   }
+  
 
   return {
     city,

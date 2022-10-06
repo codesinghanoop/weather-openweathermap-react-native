@@ -22,7 +22,7 @@ const HomeContainer = () => {
     fetchLatAndLong,
   } = useFetchWeather()
   const modalRef = useRef<BaseModalRef>(null)
-  const { allPlaceData } = useAddDeleteCity()
+  const { allPlaceData, onDeleteCity } = useAddDeleteCity()
 
   const showModal = useCallback(() => {
     modalRef?.current?.show()
@@ -75,21 +75,24 @@ const HomeContainer = () => {
         transparent={false}
       >
         <AddCityForm />
-        <ListHeading>Places Saved</ListHeading>
         <ListContainer>
+          <ListHeading>Places Saved</ListHeading>
           <List
             sections={allPlaceData}
             keyExtractor={(item: string, index: number) => item + index}
-            renderItem={({ item }: { item: string }) => (
-              <ListDataText onPress={() => onSavedItemPress(item)}>
-                {item}
-              </ListDataText>
+            renderItem={({ item, section }: { item: string, section: any }) => (
+              <ListItemContainer key={item}>
+                <ListDataText onPress={() => onSavedItemPress(item)}>
+                    {item}
+                </ListDataText>
+                <ListDataText onPress={() => onDeleteCity(item, section?.title)}>X</ListDataText>
+              </ListItemContainer>
             )}
             renderSectionHeader={({
               section: { title },
             }: {
               section: { title: string }
-            }) => <ListSectionHeading>{title}</ListSectionHeading>}
+            }) => <ListSectionHeading key={title}>{title}</ListSectionHeading>}
           />
         </ListContainer>
       </BaseModal>
@@ -135,12 +138,16 @@ const ListDataText = styled.Text`
 `
 
 const List = styled.SectionList`
-  flex: 1;
-  flex-grow: 1;
 `
 
 const ListContainer = styled.View`
-  flex: 1;
+  padding: 8px;
+`
+
+const ListItemContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 8px;
 `
 
 export default HomeContainer
